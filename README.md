@@ -3,7 +3,7 @@
 
 # R-text-data
 
-The goal of this repository is to act as a collection of textural data
+The goal of this repository is to act as a collection of textual data
 set to be used for training and practice in text mining/NLP in R. This
 repository will not be a guide on how to do text analysis/mining but
 rather how to get a data set to get started with minimal hassle.
@@ -13,12 +13,16 @@ rather how to get a data set to get started with minimal hassle.
   - [Main page](#R-text-data)
   - [CRAN packages](#cran-packages)
       - [janeaustenr](#janeaustenr)
+      - [proustr](#proustr)
       - [gutenbergr](#gutenbergr)
       - [text2vec](#text2vec)
+      - [epubr](#epubr)
   - [Github packages](#github-packages)
       - [sacred](#sacred)
       - [hcandersenr](#hcandersenr)
       - [harrypotter](#harrypotter)
+      - [koanr](#koanr)
+      - [rperseus](#rperseus)
       - [subtools](#subtools)
   - [Wild data](#wild-data)
       - Cornell data
@@ -80,6 +84,40 @@ Examples:
 
   - <https://juliasilge.com/blog/if-i-loved-nlp-less/>
 
+### proustr
+
+This **proustr** packages gives you access to tools designed to do
+Natural Language Processing in French.
+
+``` r
+#install.packages("proustr")
+library(proustr)
+```
+
+Furthermore it includes the following 7 books
+
+  - Du côté de chez Swann (1913): `ducotedechezswann`.
+  - À l’ombre des jeunes filles en fleurs (1919):
+    `alombredesjeunesfillesenfleurs`.
+  - Le Côté de Guermantes (1921): `lecotedeguermantes`.
+  - Sodome et Gomorrhe (1922) : `sodomeetgomorrhe`.
+  - La Prisonnière (1923) :`laprisonniere`.
+  - Albertine disparue (1925, also know as : La Fugitive) :
+    `albertinedisparue`.
+  - Le Temps retrouvé (1927) : `letempretrouve`.
+
+Which are all found in the `proust_books()` function.
+
+``` r
+dplyr::glimpse(proust_books())
+#> Observations: 4,690
+#> Variables: 4
+#> $ text   <chr> "Longtemps, je me suis couché de bonne heure. Parfois, ...
+#> $ book   <chr> "Du côté de chez Swann", "Du côté de chez Swann", "Du c...
+#> $ volume <chr> "Première partie : Combray", "Première partie : Combray...
+#> $ year   <dbl> 1913, 1913, 1913, 1913, 1913, 1913, 1913, 1913, 1913, 1...
+```
+
 ### gutenbergr
 
 The **gutenbergr** package allows for search and download of public
@@ -133,7 +171,7 @@ Still pending.
 ### text2vec
 
 While the **text2vec** package is data package by itself, it does
-include a textural data set inside.
+include a textual data set inside.
 
 ``` r
 #install.packages("text2vec")
@@ -153,6 +191,19 @@ dplyr::glimpse(movie_review)
 #> $ sentiment <int> 1, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0...
 #> $ review    <chr> "With all this stuff going down at the moment with M...
 ```
+
+### epubr
+
+The **epubr** package allows for extraction of metadata and textual
+content of epub files.
+
+``` r
+install.packages("epubr")
+library(epubr)
+```
+
+Further information and examples can be found
+[here](https://github.com/ropensci/epubr).
 
 ## Github packages
 
@@ -250,9 +301,65 @@ Examples:
   - [Harry Plotter: Part 2 – Hogwarts Houses and their
     Stereotypes](https://paulvanderlaken.com/2017/08/22/harry-plotter-part-2-hogwarts-houses-and-their-stereotypes/)
 
+## koanr
+
+The **koanr** package includes text from several of the more important
+Zen koan texts.
+
+``` r
+#devtools::install_github("malcolmbarrett/koanr")
+library(koanr)
+```
+
+The texts in this package include The Gateless Gate (`gateless_gate`),
+The Blue Cliff Record (`blue_cliff_record`), The Record of the
+Transmission of the Light(`record_of_light`), and The Book of
+Equanimity(`book_of_equanimity`).
+
+``` r
+dplyr::glimpse(gateless_gate)
+#> Observations: 192
+#> Variables: 4
+#> $ collection <chr> "The Gateless Gate", "The Gateless Gate", "The Gate...
+#> $ case       <int> 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, ...
+#> $ type       <chr> "title", "main_case", "commentary", "capping_verse"...
+#> $ text       <chr> "Joshu's Dog", "A monk asked Joshu, \"Has the dog t...
+```
+
+### rperseus
+
+The goal of rperseus is to furnish classicists, textual critics, and R
+enthusiasts with texts from the Classical World. While the English
+translations of most texts are available through `gutenbergr`, rperseus
+returns these works in their original language–Greek, Latin, and Hebrew.
+
+``` r
+#devtools::install_github("ropensci/rperseus")
+library(rperseus)
+aeneid_latin <- perseus_catalog %>% 
+  filter(group_name == "Virgil",
+         label == "Aeneid",
+         language == "lat") %>% 
+  pull(urn) %>% 
+  get_perseus_text()
+head(aeneid_latin)
+#> # A tibble: 6 x 7
+#>   text        urn       group_name label description      language section
+#>   <chr>       <chr>     <chr>      <chr> <chr>            <chr>      <int>
+#> 1 Arma virum… urn:cts:… Virgil     Aene… "Perseus:bib:oc… lat            1
+#> 2 Conticuere… urn:cts:… Virgil     Aene… "Perseus:bib:oc… lat            2
+#> 3 Postquam r… urn:cts:… Virgil     Aene… "Perseus:bib:oc… lat            3
+#> 4 At regina … urn:cts:… Virgil     Aene… "Perseus:bib:oc… lat            4
+#> 5 Interea me… urn:cts:… Virgil     Aene… "Perseus:bib:oc… lat            5
+#> 6 Sic fatur … urn:cts:… Virgil     Aene… "Perseus:bib:oc… lat            6
+```
+
+See [the vignette for more
+examples.](https://ropensci.github.io/rperseus/articles/rperseus-vignette.html)
+
 ### subtools
 
-The **subtools** package doesn’t include any textural data, but allows
+The **subtools** package doesn’t include any textual data, but allows
 you to read subtitle files.
 
 ``` r
